@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+        }
+     </style>
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Напишите задачу">
+    <button onclick="addTask()">Добавить</button>
+    <ul id="taskList"></ul>
+
+    <script>
+        // Создаем пустой массив для хранения задач
+        let tasks = [];
+
+        // Функция для добавления задачи
+        function addTask() {
+            // Получаем значение из полей ввода
+            let taskInput = document.getElementById('taskInput');
+            let taskText = taskInput.value;
+
+            // Проверяем наличие текста задачи
+            if (taskText === '') {
+                alert('Пожалуйста, введите задачу');
+                return;
+            }
+
+
+            let task = {
+                text: taskText,
+                completed: false
+            };
+
+
+            tasks.push(task);
+
+            taskInput.value = '';
+            renderTaskList();
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTaskList();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTaskList();
+        }
+
+        function renderTaskList() {
+            let taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+
+            // Проходимся по всем задачам и создаем соответствующие элементы списка
+            for (let i = 0; i < tasks.length; i++) {
+                let task = tasks[i];
+
+                let listItem = document.createElement('li');
+
+                // Добавляем класс "completed", если задача выполнена
+                if (task.completed) {
+                    listItem.classList.add('completed');
+                }
+
+                // Добавляем текст задачи
+                let taskText = document.createElement('span');
+                taskText.innerText = task.text;
+                listItem.appendChild(taskText);
+
+                // Добавляем кнопку для отметки задачи как выполненной или невыполненной
+                let toggleButton = document.createElement('button');
+                toggleButton.innerText = 'Готово';
+                toggleButton.addEventListener('click', function() {
+                    toggleTask(i);
+                });
+                listItem.appendChild(toggleButton);
+
+                // Добавляем кнопку для удаления задачи
+                let deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Удалить';
+                deleteButton.addEventListener('click', function() {
+                    deleteTask(i);
+                });
+                listItem.appendChild(deleteButton);
+
+                // Добавляем элемент списка в список задач
+                taskList.appendChild(listItem);
+            }
+        }
+    </script>
+</body>
+</html>
